@@ -7,27 +7,26 @@ module.exports = async (req, res) => {
   // 👉 1. ROOT ENDPOINT "/"
   // -------------------------------------
   if (path === "/" || path === "") {
-    return res
-      .status(200)
-      .set("Content-Type", "application/json")
-      .send(
-        JSON.stringify(
-          {
-            success: true,
-            author: "ItachiXD",
-            message: "TikWM FYP API",
-            endpoints: {
-              "/api/fyp?q=keyword": "Search TikTok videos by keyword",
-              "/": "API information (this page)"
-            },
-            example: {
-              fyp: "/api/fyp?q=ITACHI"
-            }
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    return res.end(
+      JSON.stringify(
+        {
+          success: true,
+          author: "ItachiXD",
+          message: "TikWM FYP API",
+          endpoints: {
+            "/api/fyp?q=keyword": "Search TikTok videos by keyword",
+            "/": "API information (this page)"
           },
-          null,
-          2
-        )
-      );
+          example: {
+            fyp: "/api/fyp?q=ITACHI"
+          }
+        },
+        null,
+        2
+      )
+    );
   }
 
   // -------------------------------------
@@ -67,53 +66,50 @@ module.exports = async (req, res) => {
           })
           .filter(Boolean) || [];
 
-      return res
-        .status(200)
-        .set("Content-Type", "application/json")
-        .send(
-          JSON.stringify(
-            {
-              success: true,
-              author: "ItachiXD",
-              keyword,
-              results
-            },
-            null,
-            2
-          )
-        );
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(
+        JSON.stringify(
+          {
+            success: true,
+            author: "ItachiXD",
+            keyword,
+            results
+          },
+          null,
+          2
+        )
+      );
     } catch (err) {
-      return res
-        .status(500)
-        .set("Content-Type", "application/json")
-        .send(
-          JSON.stringify(
-            {
-              success: false,
-              error: err.message
-            },
-            null,
-            2
-          )
-        );
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(
+        JSON.stringify(
+          {
+            success: false,
+            error: err.message
+          },
+          null,
+          2
+        )
+      );
     }
   }
 
   // -------------------------------------
   // 👉 404
   // -------------------------------------
-  return res
-    .status(404)
-    .set("Content-Type", "application/json")
-    .send(
-      JSON.stringify(
-        {
-          success: false,
-          error: "Endpoint not found",
-          try: ["/", "/api/fyp?q=keyword"]
-        },
-        null,
-        2
-      )
-    );
+  res.statusCode = 404;
+  res.setHeader("Content-Type", "application/json");
+  return res.end(
+    JSON.stringify(
+      {
+        success: false,
+        error: "Endpoint not found",
+        try: ["/", "/api/fyp?q=keyword"]
+      },
+      null,
+      2
+    )
+  );
 };
