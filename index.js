@@ -1,25 +1,33 @@
 const axios = require("axios");
 
 module.exports = async (req, res) => {
-  // PATH DECIDER
   const path = req.url.split("?")[0];
 
   // -------------------------------------
   // 👉 1. ROOT ENDPOINT "/"
   // -------------------------------------
   if (path === "/" || path === "") {
-    return res.status(200).json({
-      success: true,
-      author: "ITACHI",
-      message: "TikWM FYP API",
-      endpoints: {
-        "/api/fyp?q=keyword": "Search TikTok videos by keyword",
-        "/": "API information (this page)"
-      },
-      example: {
-        fyp: "/api/fyp?q=ITACHI"
-      }
-    });
+    return res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .send(
+        JSON.stringify(
+          {
+            success: true,
+            author: "ItachiXD",
+            message: "TikWM FYP API",
+            endpoints: {
+              "/api/fyp?q=keyword": "Search TikTok videos by keyword",
+              "/": "API information (this page)"
+            },
+            example: {
+              fyp: "/api/fyp?q=ITACHI"
+            }
+          },
+          null,
+          2
+        )
+      );
   }
 
   // -------------------------------------
@@ -45,8 +53,8 @@ module.exports = async (req, res) => {
           "User-Agent":
             "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Safari/537.36",
           "X-Requested-With": "XMLHttpRequest",
-          Cookie: cookie,
-        },
+          Cookie: cookie
+        }
       });
 
       const data = resp.data;
@@ -59,26 +67,53 @@ module.exports = async (req, res) => {
           })
           .filter(Boolean) || [];
 
-      return res.status(200).json({
-        success: true,
-        author: "ITACHI",
-        keyword,
-        results,
-      });
+      return res
+        .status(200)
+        .set("Content-Type", "application/json")
+        .send(
+          JSON.stringify(
+            {
+              success: true,
+              author: "ItachiXD",
+              keyword,
+              results
+            },
+            null,
+            2
+          )
+        );
     } catch (err) {
-      return res.status(500).json({
-        success: false,
-        error: err.message,
-      });
+      return res
+        .status(500)
+        .set("Content-Type", "application/json")
+        .send(
+          JSON.stringify(
+            {
+              success: false,
+              error: err.message
+            },
+            null,
+            2
+          )
+        );
     }
   }
 
   // -------------------------------------
-  // 👉 404 for unknown routes
+  // 👉 404
   // -------------------------------------
-  return res.status(404).json({
-    success: false,
-    error: "Endpoint not found",
-    try: ["/", "/api/fyp?q=keyword"],
-  });
+  return res
+    .status(404)
+    .set("Content-Type", "application/json")
+    .send(
+      JSON.stringify(
+        {
+          success: false,
+          error: "Endpoint not found",
+          try: ["/", "/api/fyp?q=keyword"]
+        },
+        null,
+        2
+      )
+    );
 };
